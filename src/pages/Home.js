@@ -2,6 +2,8 @@ import React from 'react'
 import { Row, Col } from 'antd'
 import PostList from '../components/post/PostList'
 import CreatePost from '../components/post/CreatePost'
+import Axios from '../api.service'
+import jwtDecode from 'jwt-decode';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -87,6 +89,12 @@ export default class Home extends React.Component {
           }
         ],
     }
+  }
+
+  componentDidMount() {
+    Axios.get('/protected').then((response) => {
+      console.log(response)
+    })
   }
 
   render() {
