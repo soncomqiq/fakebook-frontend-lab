@@ -15,10 +15,10 @@ export default class PostList extends React.Component {
       <Post key={post.id}
         author={post.author}
         message={post.message}
-        imgSrc={post.imgSrc}
+        imgSrc={post.image_url}
         date={post.date}
         commentList={post.commentList}
-        owner={post.owner}
+        owner={this.props.owner}
       />
     ))
   }

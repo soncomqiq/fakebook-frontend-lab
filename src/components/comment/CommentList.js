@@ -8,8 +8,8 @@ export default class CommentList extends React.Component {
     return this.props.commentList.map(comment => (
       <Row key={comment.id} type="flex" align="middle" justify="start" style={{ marginLeft: '16px', marginRight: '16px' }}>
         <Comment
-          author={comment.author}
-          avatar={comment.avatar}
+          author={comment.user.name}
+          avatar={comment.user.profilePic}
           content={comment.content}
           datetime={comment.datetime}
         />

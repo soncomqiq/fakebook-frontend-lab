@@ -1,17 +1,34 @@
 import React from 'react'
 import { Card, Row, Col, Avatar, Button } from 'antd'
+import Axios from '../../config/api.service'
 
 export default class FriendComponent extends React.Component {
-  renderButtonList() {
-    return this.props.buttonList.map(button => (
-      <Col span={12}>
-        <Button>{button.buttonName}</Button>
-      </Col>
-    ))
+  handleDeleteFriend = (id) => {
+    // Lab
+  }
+
+  handleAcceptFriend = (id) => {
+    // Lab
+  }
+
+  handleDenyFriend = (id) => {
+    // Lab
+  }
+
+  renderButton = () => {
+    if (this.props.type == "friend") {
+      return <Button onClick={() => this.handleDeleteFriend(this.props.friendInfo.id)}>ลบเพื่อน</Button>
+    } else if ((this.props.type == "request")) {
+      return (
+        <div>
+          <Button onClick={() => this.handleAcceptFriend(this.props.friendInfo.id)}>ยอมรับเพื่อน</Button>
+          <Button onClick={() => this.handleDenyFriend(this.props.friendInfo.id)}>ปฏิเสธเพื่อน</Button>
+        </div>
+      )
+    }
   }
 
   render() {
-    console.log(this.props.buttonList[0].buttonName)
     return (
       <Row>
         <Card
@@ -19,14 +36,16 @@ export default class FriendComponent extends React.Component {
         >
           <Row type="flex" justify="center">
             <Col>
-              <Avatar shape="square" size={64} icon="user" />
+              <Avatar src={this.props.friendInfo.profilePic} shape="square" size={64} icon="user" />
             </Col>
             <Col type="flex" align="center" style={{ marginLeft: '10px' }}>
               <Row type="flex" justify="center">
                 <Button type="link"><strong>{this.props.friendInfo.name}</strong></Button>
               </Row>
               <Row type="flex" justify="center">
-                {this.renderButtonList()}
+                <Col span={24}>
+                  {this.renderButton()}
+                </Col>
               </Row>
             </Col>
           </Row>

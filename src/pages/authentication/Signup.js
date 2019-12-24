@@ -3,6 +3,11 @@ import { Row, Form, Icon, Input, Col, Button } from 'antd'
 import logo from '../../images/logo.png'
 
 export default class Signup extends React.Component {
+
+  handleSubmit = () => {
+
+  }
+
   render() {
     return (
       <Row type="flex" style={{ height: '100vh' }} align="middle">

@@ -1,9 +1,38 @@
 import React from 'react'
 import { Row, Col, Form, Icon, Input, Button } from 'antd';
 import logo from '../../images/logo.png'
+import { connect } from 'react-redux'
+import { login } from '../../redux/actions/actions'
+import jwtDecode from 'jwt-decode'
+import Axios from '../../config/api.service'
+import { Link } from 'react-router-dom';
 
-export default class Login extends React.Component {
+class Login extends React.Component {
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        Axios.post('/loginUser', {
+          username: values.username,
+          password: values.password
+        })
+          .then(result => {
+            const user = jwtDecode(result.data.token)
+            this.props.login(user, result.data.token)
+            this.props.history.push('/')
+            window.location.reload(true);
+          })
+          .catch(err => {
+            console.error(err);
+            this.props.form.resetFields()
+          })
+      }
+    });
+  }
+
   render() {
+    const { getFieldDecorator } = this.props.form;
+
     return (
       <div>
         <Row type="flex" justify="center" align="middle" style={{ height: '100vh' }}>
@@ -12,25 +41,34 @@ export default class Login extends React.Component {
           </Col>
           <Col md={8} sm={12} xs={24}>
             <Form onSubmit={this.handleSubmit} className="login-form" style={{ maxWidth: '400px', width: '100%' }}>
-              <Form.Item>
-                <Input
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="Username"
-                />
+              <Form.Item label="Username">
+                {getFieldDecorator('username', {
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Please input your nickname!'
+                    }
+                  ],
+                })(<Input />)}
               </Form.Item>
-              <Form.Item>
-                <Input
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  type="password"
-                  placeholder="Password"
-                />
+              <Form.Item label="Password">
+                {getFieldDecorator('password', {
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Please input your password!',
+                    }
+                  ],
+                })(<Input.Password />)}
               </Form.Item>
               <Row>
                 <Col span={12}>
                   <Form.Item>
-                    <Button block type="link" htmlType="submit" className="login-form-button" href="/signup">
-                      Signup
-                    </Button>
+                    <Link to='/signup'>
+                      <Button block type="link" >
+                        Signup
+                      </Button>
+                    </Link>
                   </Form.Item>
                 </Col>
                 <Col span={12}>
@@ -48,3 +86,10 @@ export default class Login extends React.Component {
     )
   }
 }
+
+const mapDispatchToProps = {
+  login: login
+}
+
+const LoginForm = Form.create({ name: 'login' })(Login);
+export default connect(null, mapDispatchToProps)(LoginForm)

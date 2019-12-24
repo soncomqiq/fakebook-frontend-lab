@@ -1,4 +1,7 @@
 import axios from "axios";
+import { TOKEN } from '../config/constants'
+import { LOGOUT_USER } from '../redux/actions/actions'
+import store from "../redux/store/store";
 
 const UNPROTECTED_PATHS = [
   "loginUser",
@@ -7,17 +10,24 @@ const UNPROTECTED_PATHS = [
 
 axios.defaults.baseURL = 'http://localhost:8080'
 
+const isUnprotectedPath = (url) => {
+  for (let path of UNPROTECTED_PATHS) {
+    if (url.includes(path)) {
+      return true
+    }
+  }
+  return false
+}
+
 axios.interceptors.request.use(
   async config => {
     console.log(config)
 
-    for (let path of UNPROTECTED_PATHS) {
-      if (config.url.includes(path)) {
-        return config
-      }
+    if (isUnprotectedPath(config.url)) {
+      return config
     }
 
-    let token = localStorage.getItem("ACCESS_TOKEN");
+    let token = localStorage.getItem(TOKEN);
     config.headers["Authorization"] = `Bearer ${token}`;
     return config;
   },
@@ -27,32 +37,27 @@ axios.interceptors.request.use(
 );
 
 // Redirect to login page in case of 401 response
-// axios.interceptors.response.use(
-//   async config => {
-//     return config;
-//   },
-//   async error => {
-//     if (error.request === undefined) throw error;
+axios.interceptors.response.use(
+  async config => {
+    return config;
+  },
+  async error => {
+    if (error.request === undefined) throw error;
 
-//     let url = error.request.responseURL;
-//     if (error.request.status === 401 && url.includes("auth") && !url.includes("refresh")) {
-//       throw error;
-//     }
+    let url = error.request.responseURL;
+    if (error.request.status === 401 && isUnprotectedPath(url)) {
+      throw error;
+    }
 
-//     if (error.request.status === 401) {
-//       console.log("Session expire, redirect to login");
+    if (error.request.status === 401) {
+      console.log("Session expire, redirect to login");
 
-//       await store.dispatch("LOGOUT");
-//       router.push({ path: "/login/" });
+      localStorage.removeItem(TOKEN)
+      store.dispatch({ type: LOGOUT_USER })
+    }
 
-//       store.dispatch("SHOW_SNACKBAR", {
-//         message: "Session หมดอายุ กรุณาเข้าสู่ระบบใหม่",
-//         color: "error",
-//       });
-//     }
-
-//     throw error;
-//   },
-// );
+    throw error;
+  },
+);
 
 export default axios
