@@ -15,7 +15,11 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    // Lab
+    this.setState({
+      owner: {
+        profilePic: this.props.user.profilePic
+      }
+    })
   }
 
   render() {

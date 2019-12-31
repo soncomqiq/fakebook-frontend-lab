@@ -11,8 +11,18 @@ export default class FriendsRequest extends React.Component {
     }
   }
 
-  fetchRequestList = () => {
+  fetchRequestList = async () => {
     // Lab
+    Axios.get('/request-list')
+      .then(result => {
+        console.log(result.data);
+        this.setState({
+          friendsRequest: result.data
+        })
+      })
+      .catch(err => {
+        console.error(err);
+      })
   }
 
   componentDidMount() {

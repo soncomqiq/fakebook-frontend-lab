@@ -4,15 +4,35 @@ import Axios from '../../config/api.service'
 
 export default class FriendComponent extends React.Component {
   handleDeleteFriend = (id) => {
-    // Lab
+    // Lab P'NAT C
+    try {
+      Axios.get(`/delete-friend/${id}`)
+        .then(result => {
+          this.props.fetchFriendsList()
+        })
+
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   handleAcceptFriend = (id) => {
-    // Lab
+    // Lab P'mark
+    Axios.get(`/accept-friend-request/${id}`)
+      .then(result => this.props.fetchRequestList())
+      .catch(err => console.log(err))
   }
 
   handleDenyFriend = (id) => {
-    // Lab
+    // Lab P'pon
+    try {
+      Axios.get(`/deny-friend-request/${id}`)
+        .then(result => {
+          this.props.fetchRequestList()
+        })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   renderButton = () => {
@@ -54,3 +74,4 @@ export default class FriendComponent extends React.Component {
     )
   }
 }
+

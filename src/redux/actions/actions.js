@@ -4,14 +4,14 @@ export const LOGIN_USER = 'LOGIN_USER'
 export const LOGOUT_USER = 'LOGOUT_USER'
 
 export function logoutUser() {
-  localStorage.removeItem("ACCESS_TOKEN")
+  localStorage.removeItem(TOKEN)
   return {
     type: LOGOUT_USER,
   }
 }
 
 function fetchLogin(token) {
-  //Lab
+  localStorage.setItem(TOKEN, token)
 }
 
 export function login(user, token) {
@@ -23,7 +23,7 @@ export function login(user, token) {
 }
 
 function fetchLogout() {
-  //Lab
+  localStorage.removeItem(TOKEN)
 }
 
 export function logout() {
