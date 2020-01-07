@@ -20,7 +20,7 @@ class App extends React.Component {
           </Header>
           <Content style={{ height: '95vh' }}>
             <Switch>
-              <PrivateRoute handleAppLogin={this.login} role={role} />
+              <PrivateRoute role={role} />
             </Switch>
           </Content>
         </Layout>
